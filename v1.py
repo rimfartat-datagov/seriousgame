@@ -1,232 +1,242 @@
 import streamlit as st
 
-# --------------------------
+# ------------------------
 # Scenario definitions
-# --------------------------
+# ------------------------
 scenarios = {
-    "AI for Automated Purchase Orders": [
+    "AI Purchase Order Assistant": [
         {
-            "question": "How do you discover and integrate supplier data?",
+            "question": "You need supplier data. Do you...",
             "options": {
-                "Manual spreadsheets from procurement": {"time": -2, "cost": +1, "trust": -2, "impact": -3},
-                "Enterprise data catalog with master data": {"time": +2, "cost": -1, "trust": +3, "impact": +3}
+                "Manually collect spreadsheets from teams": {"time": 2, "cost": 2, "trust": -2, "impact": -2},
+                "Invest in a governed supplier data catalog": {"time": -2, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you handle metadata & context?",
+            "question": "Data shows inconsistencies in supplier IDs. Do you...",
             "options": {
-                "Skip metadata standards": {"time": +1, "cost": +2, "trust": -4, "impact": -3},
-                "Structured metadata & taxonomy": {"time": -1, "cost": -1, "trust": +4, "impact": +4}
+                "Let developers fix them case by case": {"time": 2, "cost": 2, "trust": -1, "impact": -2},
+                "Set up data quality validation rules": {"time": -2, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "When do you validate data quality?",
+            "question": "Procurement asks about AI explainability. Do you...",
             "options": {
-                "Validate only at deployment": {"time": 0, "cost": +3, "trust": -3, "impact": -2},
-                "Real-time validation in pipelines": {"time": -2, "cost": -1, "trust": +5, "impact": +5}
+                "Deliver a black-box model": {"time": -1, "cost": -1, "trust": -2, "impact": -2},
+                "Provide explainable ML with governance policies": {"time": 1, "cost": 1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you manage access?",
+            "question": "Scaling to multiple regions. Do you...",
             "options": {
-                "Broad access for speed": {"time": +1, "cost": +3, "trust": -5, "impact": -2},
-                "Role-based access & audit logs": {"time": -1, "cost": -1, "trust": +4, "impact": +3}
+                "Copy-paste local pipelines": {"time": 2, "cost": 2, "trust": -1, "impact": -2},
+                "Standardize with metadata lineage & access controls": {"time": -2, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you scale to enterprise?",
+            "question": "External supplier datasets available. Do you...",
             "options": {
-                "Each region builds its own solution": {"time": +2, "cost": +2, "trust": -3, "impact": -5},
-                "Centralized standardized pipeline": {"time": -1, "cost": -2, "trust": +5, "impact": +6}
+                "Ingest without compliance review": {"time": 1, "cost": 3, "trust": -2, "impact": -2},
+                "Review external data for compliance & quality": {"time": -1, "cost": -1, "trust": 2, "impact": 2}
             }
         }
     ],
-
-    "GenAI Chatbot for Customers": [
+    "GenAI Customer Chatbot": [
         {
-            "question": "How do you source data?",
+            "question": "You need product info for chatbot answers. Do you...",
             "options": {
-                "Directly connect to raw database": {"time": +2, "cost": +2, "trust": -4, "impact": -3},
-                "Curated datasets & knowledge graph": {"time": -2, "cost": -1, "trust": +5, "impact": +5}
+                "Scrape PDFs without metadata": {"time": 1, "cost": 2, "trust": -2, "impact": -2},
+                "Build knowledge base with metadata management": {"time": -1, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you provide context to the LLM?",
+            "question": "LLM hallucinations appear. Do you...",
             "options": {
-                "Full docs without classification": {"time": +1, "cost": +2, "trust": -3, "impact": -2},
-                "Embeddings + metadata categories (RAG)": {"time": -1, "cost": -1, "trust": +4, "impact": +4}
+                "Ignore and launch anyway": {"time": -1, "cost": 2, "trust": -2, "impact": -2},
+                "Add data validation & retrieval-augmented generation": {"time": 1, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you monitor bias & quality?",
+            "question": "Legal team mentions AI Act constraints. Do you...",
             "options": {
-                "Deploy without monitoring": {"time": +1, "cost": +3, "trust": -5, "impact": -3},
-                "Feedback loop + validation dashboard": {"time": -2, "cost": -1, "trust": +5, "impact": +4}
+                "Hope compliance won’t be checked": {"time": -1, "cost": 3, "trust": -3, "impact": -2},
+                "Document model lineage & explainability": {"time": 1, "cost": -1, "trust": 3, "impact": 2}
             }
         },
         {
-            "question": "How do you ensure compliance?",
+            "question": "Scaling chatbot to multiple languages. Do you...",
             "options": {
-                "Skip explainability & GDPR checks": {"time": +1, "cost": +4, "trust": -6, "impact": -5},
-                "Legal review + explainability layer": {"time": -2, "cost": -1, "trust": +6, "impact": +5}
+                "Use ad hoc translation tools": {"time": 1, "cost": 1, "trust": -1, "impact": -2},
+                "Centralize multilingual metadata & access policies": {"time": -2, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you scale adoption?",
+            "question": "You want to add third-party market data. Do you...",
             "options": {
-                "POC for one product only": {"time": +2, "cost": 0, "trust": -2, "impact": -4},
-                "Governed multi-product rollout": {"time": -1, "cost": -2, "trust": +4, "impact": +6}
+                "Ingest without license review": {"time": 1, "cost": 3, "trust": -2, "impact": -2},
+                "Check compliance & integrate via governed pipeline": {"time": -1, "cost": -1, "trust": 2, "impact": 2}
             }
         }
     ],
-
-    "Predictive Maintenance for Manufacturing": [
+    "Predictive Maintenance AI": [
         {
-            "question": "How do you ingest IoT data?",
+            "question": "IoT sensors produce raw data. Do you...",
             "options": {
-                "Direct raw streams, no schema": {"time": +2, "cost": +2, "trust": -3, "impact": -2},
-                "Standardized ingestion platform": {"time": -2, "cost": -1, "trust": +4, "impact": +5}
+                "Let engineers store locally": {"time": 1, "cost": 1, "trust": -1, "impact": -2},
+                "Ingest into governed data lake with catalog": {"time": -2, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you manage data quality?",
+            "question": "You detect missing sensor values. Do you...",
             "options": {
-                "Clean data only when anomalies appear": {"time": +1, "cost": +3, "trust": -4, "impact": -2},
-                "Continuous checks & thresholds": {"time": -2, "cost": -1, "trust": +5, "impact": +5}
+                "Patch manually when alerts fail": {"time": 2, "cost": 2, "trust": -1, "impact": -2},
+                "Set automated data quality rules": {"time": -2, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you handle access & security?",
+            "question": "Maintenance team wants explainability. Do you...",
             "options": {
-                "All engineers access raw streams": {"time": +1, "cost": +2, "trust": -3, "impact": -2},
-                "Role-based access + anonymization": {"time": -1, "cost": -1, "trust": +4, "impact": +3}
+                "Give them probability scores only": {"time": -1, "cost": -1, "trust": -2, "impact": -2},
+                "Provide transparent rules & lineage": {"time": 1, "cost": 1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "What about model explainability?",
+            "question": "Scaling to global factories. Do you...",
             "options": {
-                "Black-box deep learning only": {"time": +1, "cost": +3, "trust": -5, "impact": -3},
-                "Add SHAP/LIME explanations": {"time": -2, "cost": -1, "trust": +6, "impact": +5}
+                "Let each factory design pipelines": {"time": 2, "cost": 2, "trust": -1, "impact": -2},
+                "Standardize tools with access/security governance": {"time": -2, "cost": -1, "trust": 2, "impact": 2}
             }
         },
         {
-            "question": "How do you scale across plants?",
+            "question": "External benchmark datasets are available. Do you...",
             "options": {
-                "Each plant builds separate model": {"time": +2, "cost": +2, "trust": -2, "impact": -4},
-                "Central platform, shared governance": {"time": -1, "cost": -2, "trust": +5, "impact": +6}
+                "Import without checks": {"time": 1, "cost": 3, "trust": -2, "impact": -2},
+                "Review external data for compliance & quality": {"time": -1, "cost": -1, "trust": 2, "impact": 2}
             }
         }
     ]
 }
 
-# --------------------------
-# Score interpretations
-# --------------------------
-def interpret_score(dimension, value):
-    if dimension == "time":
-        if value <= -3: return "🚀 Accelerated Delivery"
-        elif -2 <= value <= 2: return "⚖️ Balanced speed"
-        else: return "🐌 Slowed down delivery"
-    if dimension == "cost":
-        if value <= -3: return "💰 Optimized ROI & low risk"
-        elif -2 <= value <= 2: return "⚖️ Average cost control"
-        else: return "💸 High financial/regulatory risk"
-    if dimension == "trust":
-        if value >= 3: return "✅ High stakeholder trust"
-        elif -2 <= value <= 2: return "⚖️ Medium trust"
-        else: return "❌ Low trust, poor adoption"
-    if dimension == "impact":
-        if value >= 3: return "🌍 Enterprise transformation"
-        elif -2 <= value <= 2: return "⚖️ Limited impact"
-        else: return "🛑 Blocked scaling & adoption"
+# ------------------------
+# Interpretation functions
+# ------------------------
+def interpret_time(score):
+    if score <= -3:
+        return "🐌 Lost days: Lack of governance duplicated efforts and slowed time-to-market."
+    elif -2 <= score <= 2:
+        return "⚖️ Balanced: Average delivery speed, some rework still required."
+    else:
+        return "🚀 Accelerated Delivery: Governance enabled automation and reuse, reducing delays."
 
-# --------------------------
-# Session state initialization
-# --------------------------
+def interpret_cost(score):
+    if score <= -3:
+        return "💸 High Risk: Exposed to fines, overruns, and low ROI due to weak governance."
+    elif -2 <= score <= 2:
+        return "⚖️ Average: Some costs controlled, but risks remain."
+    else:
+        return "💰 Optimized ROI: Controlled risks, maximized value of AI."
+
+def interpret_trust(score):
+    if score >= 3:
+        return "✅ High Trust: Strong explainability, compliance, and reliable data."
+    elif -2 <= score <= 2:
+        return "⚖️ Medium Trust: Some adoption, but doubts remain on transparency or quality."
+    else:
+        return "❌ Low Trust: Stakeholders reject solutions due to black-box models, poor quality, or compliance gaps."
+
+def interpret_impact(score):
+    if score >= 3:
+        return "🌍 Enterprise Impact: Governance choices enabled scaling across domains."
+    elif -2 <= score <= 2:
+        return "⚖️ Limited Impact: Success at local/POC level, struggles to scale broadly."
+    else:
+        return "🛑 Blocked Impact: Lack of governance prevented transformation and scaling."
+
+# ------------------------
+# Streamlit app
+# ------------------------
 if "page" not in st.session_state:
     st.session_state.page = "intro"
 if "scenario" not in st.session_state:
     st.session_state.scenario = None
-if "step" not in st.session_state:
-    st.session_state.step = 0
+if "question_index" not in st.session_state:
+    st.session_state.question_index = 0
 if "scores" not in st.session_state:
     st.session_state.scores = {"time": 0, "cost": 0, "trust": 0, "impact": 0}
 
-# --------------------------
-# Helper functions
-# --------------------------
-def restart_game():
-    st.session_state.page = "intro"
-    st.session_state.scenario = None
-    st.session_state.step = 0
-    st.session_state.scores = {"time": 0, "cost": 0, "trust": 0, "impact": 0}
-
-def show_scores():
-    st.sidebar.markdown("### 📊 Scoreboard")
-    st.sidebar.write(f"⏳ Time: {st.session_state.scores['time']}")
-    st.sidebar.write(f"💸 Cost Risk: {st.session_state.scores['cost']}")
-    st.sidebar.write(f"🔒 Trust: {st.session_state.scores['trust']}")
-    st.sidebar.write(f"📈 Business Impact: {st.session_state.scores['impact']}")
-
-def format_effects(effects):
-    return f"(⏳ {effects['time']} | 💸 {effects['cost']} | 🔒 {effects['trust']} | 📈 {effects['impact']})"
-
-# --------------------------
-# Pages
-# --------------------------
+# Intro page
 if st.session_state.page == "intro":
     st.title("🎮 Data Governance Serious Game")
-    st.write("Welcome! In this game, you will make governance decisions while scaling AI use cases.")
-    st.write("Each choice impacts **Time, Cost Risk, Trust, and Business Impact**:")
-    st.markdown("""
-    - ⏳ **Time**: Accelerate or delay delivery (hidden rework, data fixes).  
-    - 💸 **Cost Risk**: ROI efficiency and regulatory/financial risks.  
-    - 🔒 **Trust**: Stakeholder confidence, compliance, explainability.  
-    - 📈 **Business Impact**: Ability to scale and transform at enterprise level.  
+    st.write("""
+    Welcome!  
+    Each scenario represents an AI project.  
+    Every decision you make will impact four key **dimensions of data governance**:
+    
+    - ⏳ **Time**: Delivery speed (accelerated vs delayed).  
+    - 💸 **Cost Risk**: ROI and risk exposure (fines, overruns, wasted spend).  
+    - 🔒 **Trust**: Stakeholder confidence, explainability, compliance.  
+    - 📈 **Business Impact**: Ability to scale and transform enterprise-wide.  
+    
+    Your goal: make choices that maximize governance, adoption, and enterprise impact!
     """)
-    st.write("Pick a scenario to start:")
 
-    choice = st.selectbox("Choose your scenario", list(scenarios.keys()))
-    if st.button("Start Scenario"):
-        st.session_state.scenario = choice
-        st.session_state.page = "scenario"
+    st.subheader("Choose your scenario:")
+    for s in scenarios.keys():
+        if st.button(s):
+            st.session_state.scenario = s
+            st.session_state.page = "game"
+            st.session_state.question_index = 0
+            st.session_state.scores = {"time": 0, "cost": 0, "trust": 0, "impact": 0}
+            st.rerun()
 
-elif st.session_state.page == "scenario":
-    show_scores()
+# Game page
+elif st.session_state.page == "game":
     scenario = scenarios[st.session_state.scenario]
-    step = st.session_state.step
+    q_idx = st.session_state.question_index
+    question_data = scenario[q_idx]
 
-    if step < len(scenario):
-        st.subheader(f"Step {step+1}: {scenario[step]['question']}")
-        for option, effects in scenario[step]["options"].items():
-            label = f"{option} {format_effects(effects)}"
-            if st.button(label):
-                for dim, val in effects.items():
-                    st.session_state.scores[dim] += val
-                st.session_state.step += 1
-                st.rerun()
-    else:
-        st.session_state.page = "end"
-        st.rerun()
+    st.header(f"Scenario: {st.session_state.scenario}")
+    st.subheader(f"Step {q_idx+1}: {question_data['question']}")
 
-elif st.session_state.page == "end":
-    st.title("🏁 Scenario Complete!")
-    show_scores()
+    for option, effects in question_data["options"].items():
+        label = (
+            f"{option}\n"
+            f"⏳ {effects['time']} | 💸 {effects['cost']} | 🔒 {effects['trust']} | 📈 {effects['impact']}"
+        )
+        if st.button(label):
+            for k in st.session_state.scores:
+                st.session_state.scores[k] += effects[k]
+            if q_idx + 1 < len(scenario):
+                st.session_state.question_index += 1
+            else:
+                st.session_state.page = "results"
+            st.rerun()
+
+    # Scoreboard
+    st.sidebar.subheader("📊 Current Scores")
+    for k, v in st.session_state.scores.items():
+        st.sidebar.write(f"{k.capitalize()}: {v}")
+
+# Results page
+elif st.session_state.page == "results":
     scores = st.session_state.scores
+    st.title("🏁 Results")
 
-    st.subheader("Your Results & Interpretations")
-    st.write(f"⏳ **Time**: {scores['time']} → {interpret_score('time', scores['time'])}")
-    st.write(f"💸 **Cost Risk**: {scores['cost']} → {interpret_score('cost', scores['cost'])}")
-    st.write(f"🔒 **Trust**: {scores['trust']} → {interpret_score('trust', scores['trust'])}")
-    st.write(f"📈 **Business Impact**: {scores['impact']} → {interpret_score('impact', scores['impact'])}")
+    st.write("Here’s how your governance choices played out:")
 
-    st.subheader("🔑 Key Learnings")
-    st.markdown("""
-    - Lack of governance often induces **delays and rework** later.  
-    - **Metadata, lineage and access controls** are enablers for scaling AI.  
-    - Governance ensures **trust, compliance, and adoption** of AI products.  
+    st.write(f"⏳ Time: {scores['time']} → {interpret_time(scores['time'])}")
+    st.write(f"💸 Cost Risk: {scores['cost']} → {interpret_cost(scores['cost'])}")
+    st.write(f"🔒 Trust: {scores['trust']} → {interpret_trust(scores['trust'])}")
+    st.write(f"📈 Business Impact: {scores['impact']} → {interpret_impact(scores['impact'])}")
+
+    st.subheader("📚 Key Learnings")
+    st.write("""
+    - Lack of governance induces delays and roadblocks later.  
+    - Metadata, lineage & access are enablers for scaling AI.  
+    - Governance drives adoption, trust, and enterprise impact.  
     """)
 
-    if st.button("🔄 Play Another Scenario"):
-        restart_game()
+    st.subheader("🔄 Try another scenario")
+    if st.button("Back to intro"):
+        st.session_state.page = "intro"
         st.rerun()
