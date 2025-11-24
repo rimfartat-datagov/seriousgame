@@ -102,7 +102,7 @@ def plot_spiderchart(scores: dict):
     scaled += scaled[:1]
     angles += angles[:1]
 
-    fig, ax = plt.subplots(figsize=(1.5,1.5), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(2.8,2.8), subplot_kw=dict(polar=True))
     ax.plot(angles, scaled, color="#0d6efd", linewidth=0.5)
     ax.fill(angles, scaled, color="#0d6efd", alpha=0.25)
 
