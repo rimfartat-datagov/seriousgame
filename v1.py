@@ -108,7 +108,7 @@ def plot_spiderchart(scores: dict):
 
     # labels
     ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(labels, fontsize=12)
+    ax.set_xticklabels(labels, fontsize=8)
     # radial ticks: show meaningful ticks based on max_abs
     ticks = [-max_abs, -max_abs/2, 0, max_abs/2, max_abs]
     tick_labels = [str(int(t)) for t in ticks]
@@ -116,7 +116,7 @@ def plot_spiderchart(scores: dict):
     ax.set_yticklabels(tick_labels)
     ax.set_ylim(-1, 1)
     ax.grid(color="#e6eef8")
-    plt.title("Final Scores (normalized view)", y=1.08)
+    plt.title("Final Scores", y=1.08)
     return fig
 
 # ----------------------------
