@@ -102,7 +102,7 @@ def plot_spiderchart(scores: dict):
     scaled += scaled[:1]
     angles += angles[:1]
 
-    fig, ax = plt.subplots(figsize=(6,6), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(3,3), subplot_kw=dict(polar=True))
     ax.plot(angles, scaled, color="#0d6efd", linewidth=2)
     ax.fill(angles, scaled, color="#0d6efd", alpha=0.25)
 
@@ -429,7 +429,7 @@ elif st.session_state.page == "game":
             with cols[i]:
                 val = scores[dim]
                 st.metric(label=dim.capitalize(), value=str(val))
-                st.caption(interpret_dimension := interpret_dimension if False else interpret_dimension)  # no-op to avoid linter noise
+                #st.caption(interpret_dimension := interpret_dimension if False else interpret_dimension)  # no-op to avoid linter noise
                 st.write(interpret_dimension(val, dim))
 
         st.markdown("---")
